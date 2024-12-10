@@ -65,8 +65,17 @@ app.get('/article/:id', async (request, response) => {
     return response.json(foundArticle);
 });
 
-app.post('/save-article', (request, response) => {
-    return response.json({ message : "Todo" });
+app.post('/save-article', async (request, response) => {
+    // Récupérer le body envoyé
+    const articleJSON = request.body;
+
+    // Save en base
+    const newArticle = new Article(articleJSON);
+
+    await newArticle.save();
+
+    // Réponse json
+    return response.json(newArticle);
 });
 
 app.delete('/article/:id', (request, response) => {
