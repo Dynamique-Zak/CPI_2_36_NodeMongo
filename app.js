@@ -78,8 +78,28 @@ app.post('/save-article', async (request, response) => {
     return response.json(newArticle);
 });
 
-app.delete('/article/:id', (request, response) => {
-    return response.json({ message : "Todo, supprimera un article" });
+app.delete('/article/:id', async (request, response) => {
+    // Récupèrer l'id
+    const idParam = request.params.id;
+
+    // BONUS : Eviter de try catch on va tester que l'id a 24 character
+    if (idParam.length != 24){
+        return response.json({ code : '702' });
+    }
+
+    // Select de l'article
+    const foundArticle = await Article.findOne({ _id : idParam});
+
+    //Si l'id n'existe pas en base on delete pas
+    if (!foundArticle) {
+        return response.json({ code : '702' });
+    }
+
+    // DELETE l'article
+    await Article.deleteOne({ _id : idParam});
+
+    // Sinon ok
+    return response.json({ code : '200' });
 });
 
 // ================================================
