@@ -19,9 +19,10 @@ mongoose.connection.on('error', () => {
 // Se connecter sur mongodb (async)
 // Ca prend x temps à s'executer
 // TODO :: Adapter le lien de connexion à la base
-mongoose.connect("mongodb://localhost:27017/db_demo");
+mongoose.connect("mongodb://127.0.0.1:27017/db_article");
 
-// TODO : creer le modèle Article
+// Creer le modèle Article
+const Article = mongoose.model('Article', { title: String, content: String, author: String }, 'articles');
 
 // ================================================
 // Instancier un serveur et autoriser envokie json
@@ -35,8 +36,12 @@ app.use(express.json());
 // ================================================
 // Les routes (url/point d'entrée)
 // ================================================
-app.get('/articles', (request, response) => {
-    return response.json({ message : "Todo" });
+app.get('/articles', async (request, response) => {
+
+    // Récupérer tout les articles
+    const articles = await Article.find();
+
+    return response.json(articles);
 });
 
 app.get('/article/:id', (request, response) => {
