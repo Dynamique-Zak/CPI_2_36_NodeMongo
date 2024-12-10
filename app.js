@@ -44,10 +44,25 @@ app.get('/articles', async (request, response) => {
     return response.json(articles);
 });
 
-app.get('/article/:id', (request, response) => {
+app.get('/article/:id', async (request, response) => {
+    // Récupèrer l'id
     const idParam = request.params.id;
 
-    return response.json({ message : `id : ${idParam}` });
+    // BONUS : Eviter de try catch on va tester que l'id a 24 character
+    if (idParam.length != 24){
+        return response.json({ code : '702' });
+    }
+
+    // Select de l'article
+    const foundArticle = await Article.findOne({ _id : idParam});
+
+    //Si l'id n'existe pas en base
+    if (!foundArticle) {
+        return response.json({ code : '702' });
+    }
+
+    // Sinon ok
+    return response.json(foundArticle);
 });
 
 app.post('/save-article', (request, response) => {
