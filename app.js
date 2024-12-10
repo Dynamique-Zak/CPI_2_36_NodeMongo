@@ -33,6 +33,10 @@ const app = express();
 // AUTORISER LE BACK A RECEVOIR DES DONNEES DANS LE BODY
 app.use(express.json());
 
+// DESACTIVER LE CORS
+const cors = require('cors');
+app.use(cors());
+
 // ================================================
 // Les routes (url/point d'entrée)
 // ================================================
